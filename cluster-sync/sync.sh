@@ -5,6 +5,10 @@ aaq="${aaq##*/}"
 
 echo aaq
 
+# Default to host architecture for local cluster-sync; multi-arch is for CI/releases.
+BUILD_ARCHES=${BUILD_ARCHES:-$(go env GOARCH)}
+export BUILD_ARCHES
+
 source ./hack/build/config.sh
 source ./hack/build/common.sh
 source ./kubevirtci/cluster-up/hack/common.sh
@@ -57,7 +61,7 @@ fi
 # Need to set the DOCKER_PREFIX appropriately in the call to `make docker push`, otherwise make will just pass in the default `kubevirt`
 
 DOCKER_PREFIX=$MANIFEST_REGISTRY PULL_POLICY=$PULL_POLICY make manifests
-BUILD_ARCHES=${BUILD_ARCHES:-$(go env GOARCH)} DOCKER_PREFIX=$DOCKER_PREFIX INSECURE_REGISTRY="${insecure}" make push-multi-arch
+DOCKER_PREFIX=$DOCKER_PREFIX INSECURE_REGISTRY="${insecure}" make push-multi-arch
 
 
 function check_structural_schema {
