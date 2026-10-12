@@ -57,7 +57,7 @@ fi
 # Need to set the DOCKER_PREFIX appropriately in the call to `make docker push`, otherwise make will just pass in the default `kubevirt`
 
 DOCKER_PREFIX=$MANIFEST_REGISTRY PULL_POLICY=$PULL_POLICY make manifests
-DOCKER_PREFIX=$DOCKER_PREFIX INSECURE_REGISTRY="${insecure}" make push-multi-arch
+BUILD_ARCHES=${BUILD_ARCHES:-$(go env GOARCH)} DOCKER_PREFIX=$DOCKER_PREFIX INSECURE_REGISTRY="${insecure}" make push-multi-arch
 
 
 function check_structural_schema {
